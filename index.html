@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator IJP</title>
+    <style>
+        body { font-family: Arial, sans-serif; display: flex; justify-content: center; margin-top: 50px; }
+        .container { background: #f8f8f8; padding: 20px; border-radius: 10px; box-shadow: 0px 0px 10px rgba(0,0,0,0.1); }
+        h2 { background: #2c6ed5; color: white; padding: 10px; text-align: center; border-radius: 5px; }
+        label, select, input { display: block; width: 100%; margin-top: 10px; }
+        button { width: 100%; padding: 10px; margin-top: 10px; border: none; cursor: pointer; }
+        .calculate { background: #2c6ed5; color: white; }
+        .calculate:hover { background: #1a4b9b; }
+        .reset { background: #2c6ed5; color: white; }
+        .reset:hover { background: #1a4b9b; }
+        .result { margin-top: 20px; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Kalkulator IJP <br> Surety Bond <br> PT Jamkrindo Semarang</h2>
+        <label>Jenis Jaminan:</label>
+        <select id="jenisJaminan">
+            <option value="0.00185">Jaminan Penawaran</option>
+            <option value="0.0024">Jaminan Pelaksanaan</option>
+            <option value="0.0028">Jaminan Uang Muka</option>
+            <option value="0.0024">Jaminan Pemeliharaan</option>
+        </select>
+        
+        <label>Nilai Jaminan : <br> (Masukkan angka tanpa titik dan koma)</label>
+        <input type="number" id="nilaiJaminan" placeholder="Masukkan nilai jaminan" oninput="formatIDR()">
+        
+        <label>Nilai Jaminan (Rp):</label>
+        <input type="text" id="nilaiJaminanFormatted" disabled>
+        
+        <label>Jangka Waktu (Hari):</label>
+        <input type="number" id="jangkaWaktu" placeholder="Masukkan jumlah hari">
+        
+        <button class="calculate" onclick="hitungIJP()">Hitung IJP</button>
+        <button class="reset" onclick="resetForm()">Hapus</button>
+        
+	
+        <div class="result" id="hasil"></div>
+	
+    </div>
+
+    <script>
+        function formatIDR() {
+            let nilaiJaminan = document.getElementById("nilaiJaminan").value;
+            let formatted = new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR" }).format(nilaiJaminan);
+            document.getElementById("nilaiJaminanFormatted").value = formatted;
+        }
+
+        function hitungIJP() {
+            let jenisJaminan = parseFloat(document.getElementById("jenisJaminan").value);
+            let nilaiJaminan = parseFloat(document.getElementById("nilaiJaminan").value);
+            let jangkaWaktu = parseInt(document.getElementById("jangkaWaktu").value);
+            
+            let tarif = jangkaWaktu <= 90 ? jenisJaminan * nilaiJaminan : (jangkaWaktu / 90) * (jenisJaminan * nilaiJaminan);
+            
+            let tarifMinimal = 75000;
+            let biayaAdmin = 20000;
+            let biayaMaterai = 10000;
+            let ijp = Math.ceil(Math.max(tarif, tarifMinimal) / 1000) * 1000;
+            let totalCharge = ijp + biayaAdmin + biayaMaterai;
+            let tarifService = (jenisJaminan * 100).toFixed(3) + "%";
+            
+            document.getElementById("hasil").innerHTML = `Service Charge : <br>
+		Tarif : ${tarifService}<br>
+                Biaya Admin: Rp ${biayaAdmin.toLocaleString()}<br>
+                Biaya Materai: Rp ${biayaMaterai.toLocaleString()}<br>
+		IJP: Rp ${ijp.toLocaleString()}<br>
+                <strong>Total Charge: Rp ${totalCharge.toLocaleString()}</strong>`;
+        }
+        
+        function resetForm() {
+            document.getElementById("jenisJaminan").selectedIndex = 0;
+            document.getElementById("nilaiJaminan").value = "";
+            document.getElementById("nilaiJaminanFormatted").value = "";
+            document.getElementById("jangkaWaktu").value = "";
+            document.getElementById("hasil").innerHTML = "";
+        }
+    </script>
+</body>
+</html>
