@@ -79,13 +79,22 @@ input, select, textarea {
             let totalCharge = ijp + biayaAdmin + biayaMaterai;
             let tarifService = (jenisJaminan * 100).toFixed(3) + "%";
             
-            document.getElementById("hasil").innerHTML = `Service Charge : <br>
+            if (isNaN(nilaiJaminan) || isNaN(jangkaWaktu)) {
+                alert("Harap isi semua field dengan benar!");
+                return;
+            	}
+	    else
+
+           	{ 
+		document.getElementById("hasil").innerHTML = `Service Charge : <br>
 		Tarif : ${tarifService}<br>
                 Biaya Admin: Rp ${biayaAdmin.toLocaleString()}<br>
                 Biaya Materai: Rp ${biayaMaterai.toLocaleString()}<br>
 		IJP: Rp ${ijp.toLocaleString()}<br>
                 <strong>Total Charge: Rp ${totalCharge.toLocaleString()}</strong>`;
-        }
+        	}
+        
+	                  }
         
         function resetForm() {
             document.getElementById("jenisJaminan").selectedIndex = 0;
